@@ -1,0 +1,6 @@
+Django==2.0.1
+pytz==2017.3
+django-environ==0.4.4
+six==1.11.0
+djangorestframework==3.7.7
+
