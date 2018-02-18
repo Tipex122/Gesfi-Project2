@@ -19,8 +19,9 @@ APPS_DIR = ROOT_DIR.path('project')
 
 env = environ.Env()
 
-# This section added from an update to standards in CookieCutter Django to ensure no errors are encountered at runserver/migrations
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+# This section added from an update to standards in CookieCutter Django
+# to ensure no errors are encountered at runserver/migrations
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)
 
 if READ_DOT_ENV_FILE:
     env_file = str(ROOT_DIR.path('.env'))
@@ -42,7 +43,7 @@ if READ_DOT_ENV_FILE:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # XLH CCD  DEBUG = True
-DEBUG = env.bool('DJANGO_DEBUG', False)
+# DEBUG = env.bool('DJANGO_DEBUG', False)
 
 # XLH CCD  removed following line to production.py #
 # ALLOWED_HOSTS = []
@@ -86,7 +87,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            str(APPS_DIR.path('templates')),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,19 +109,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-        # XLH CCD remplacé par ligne ci-dessous # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#        'NAME': str(ROOT_DIR.path('db.sqlite3')),
-#    }
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ListTodo',
-        'USER': 'xavier',
-        #'PASSWORD': '',
-        #'HOST': '127.0.0.1',
-        #'PORT': '',
-    }
+    # https://github.com/joke2k/django-environ
+    # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
+    'default': env.db(),
 }
 
 
@@ -162,7 +155,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # XLH CCD Ajout lignes ci-dessous #
-STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+STATIC_ROOT = str(ROOT_DIR.path('staticfiles')) # Rajouté "path" mais est-ce nécessaire?
 
 STATICFILES_DIRS = (
     str(APPS_DIR.path('static')),
@@ -175,7 +168,7 @@ STATICFILES_FINDERS = (
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = str(APPS_DIR('media'))
+MEDIA_ROOT = str(APPS_DIR.path('media')) # Rajouté "path" mais est-ce nécessaire?
 
 REST_FRAMEWORK = {
 }
