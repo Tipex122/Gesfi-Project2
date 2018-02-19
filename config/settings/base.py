@@ -56,6 +56,7 @@ DJANGO_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
@@ -63,10 +64,16 @@ DJANGO_APPS = (
 # XLH CCD Ajout
 THIRD_PARTY_APPS = (
     'rest_framework',
+    'crispy_forms',  # Form layouts
+    'allauth',  # registration
+    'allauth.account',  # registration
+    'allauth.socialaccount',  # registration
+
 )
 
 # XLH CCD Ajout
 LOCAL_APPS = (
+    'project.users.apps.UsersConfig',
     'project.api',
 )
 
@@ -173,3 +180,49 @@ MEDIA_ROOT = str(APPS_DIR.path('media')) # Rajouté "path" mais est-ce nécessai
 REST_FRAMEWORK = {
 }
 
+
+#######################################################################################################################
+
+# PASSWORD STORAGE SETTINGS
+# ------------------------------------------------------------------------------
+# See https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+]
+
+
+# AUTHENTICATION CONFIGURATION
+# ------------------------------------------------------------------------------
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Some really nice defaults
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
+ACCOUNT_ADAPTER = 'project.users.adapters.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'project.users.adapters.SocialAccountAdapter'
+
+# Custom user app defaults
+# Select the correct user model
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'users:redirect'
+LOGIN_URL = 'account_login'
+
+# SLUGLIFIER
+AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
+
+
+# Location of root django.contrib.admin URL, use {% url 'admin:index' %}
+ADMIN_URL = r'^admin/'
+
+# Your common stuff: Below this line define 3rd party library settings
+# ------------------------------------------------------------------------------

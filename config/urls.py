@@ -16,7 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf import settings
+
 urlpatterns = [
+    path('', include('project.api.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('project.api.urls')),
+
+    # User management
+    path('users/', include('project.users.urls')),  # , namespace='users')),
+    path('accounts/', include('allauth.urls')),
 ]

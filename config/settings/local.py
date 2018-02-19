@@ -7,4 +7,4 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-DEBUG = env.bool('DJANGO_DEBUG')
+DEBUG = env.bool('DJANGO_DEBUG', default=True)
